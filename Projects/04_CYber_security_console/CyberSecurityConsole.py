@@ -1,16 +1,11 @@
 """
-Project: Cyber Security Console
-update-User Authentication Manager
-BootCamp Day: 04 / 07
-Date: 01-07-2026 /05-07-2026
+Project: Cyber Security Console(v1)
+update-User Authentication Manager(v2)
+user profile Manager(v3)
+BootCamp Day: 04 / 07 / 08
+Date: 01-07-2026 /05-07-2026 /07-07-2026
 Author: pyLearner
 """
-username="pyLearner0123"
-password="Learner0123"
-login_attempt=0
-login_success=0
-login_failed=0
-is_Logged_in=False
 
 
 def line():
@@ -23,227 +18,158 @@ def header():
     line()
       
 
-def menu():
+
+
+def front_menu():
     print()
     print("===============!!! MENU !!!===============")
-    print(" 1. Add User")
-    print(" 2. Remove User")
-    print(" 3. Search User")
-    print(" 4. Login")
-    print(" 5. Lock Account")
-    print(" 6. Unlock Account")
-    print(" 7. Change Password")
-    print(" 8. View All User ")
-    print(" 9. Count Users ")
-    print("10. Failed Login Tracking")
-    print("11. Logout")
+    print("1. Login")
+    print("2. Signup")
     print("0. Exit")
     line()
     choice=int(input("Enter Your Choice : "))
     return choice
 
 
-def print_user(user):
-   print(f"User Id       : {user[0]}")
-   print(f"username      : {user[1]}")
-   print(f"password      : {user[2]}")
-   print(f"Role          : {user[3]}")
-   print(f"Status        : {user[4]}")
-   print(f"Failed Attemp : {user[5]}")
+
+def menu():
+    print()
+    print("===============!!! MENU !!!===============")
+    print(" 1. Remove User")
+    print(" 2. Search User")
+    print(" 3. Lock Account")
+    print(" 4. Unlock Account")
+    print(" 5. Change Password")
+    print(" 6. View All User ")
+    print(" 7. Count Users ")
+    print(" 8. Failed Login Tracking")
+    print(" 9. Logout")
+    print(" 0. Exit")
+    line()
+    choice=int(input("Enter Your Choice : "))
+    return choice
 
 
-def print_list(user):
-    print(f"{user[0]} || {user[1]} ||  {user[2]} ||  {user[3]} ||  {user[4]} ||  {user[5]}")
+def print_user(user,username):
+   print("----------------------------------------")
+   print(f"username      : {username}")
+   print(f"password      : {user['password']}")
+   print(f"Role          : {user['role']}")
+   print(f"Status        : {user['status']}")
+   print(f"Failed Attempts : {user['failed_attempts']}")
+   print("----------------------------------------")
+
+
+def print_list(username,details):
+    print(f"{username} || {details['password']} ||  {details['role']} ||  {details['status']} ||  {details['failed_attempts']} ")
          
 
 
-def admin_check(entered_role):
-   if entered_role.lower()=="admin":
-        entered_pin=input("Enter Admin pin : ")
-        if entered_pin==admin_pin:
-          return True
-        else:
-           print("Invalid pin")
-           return False
-        
-        
-def manager_check(entered_role):
-   if entered_role.lower()=="manager":
-        entered_pin=input("Enter Manager pin : ")
-        if entered_pin==manager_pin:
-          return True
-        else:
-           print("Invalid pin")
-           return False
-
 def add_user():
-     if users:
-       userId = users[-1][0]+1
-     else:
-        userId=101
      while True:
-      entered_username=input("Enter Username :")
-      found=False
-      for user in users:
-       if(entered_username==user[1]):
+      username=input("Enter Username :").strip()
+      if username in users:
           print("User name already exist\n change username")
-          found=True
-          break
-      if not found:
+      else :
          break
-     username=entered_username
-     password=input("Enter Password : ")
-     entered_role = input("Enter Role : ")
-     if admin_check(entered_role):
-           role=entered_role.lower()
-     elif manager_check(entered_role):
-           role=entered_role.lower()
-     elif entered_role.lower()=="user": 
-          role=entered_role.lower()
-     else:
-        print("Invalid role") 
-        return 
-     status = "Inactive"
-     loginattemp=0 
-     new_user=[
-         userId,
-         username,
-         password,
-         role,
-         status,
-         loginattemp
-     ]
-     users.append(new_user)
+     password=input("Enter Password : ").strip()
+     role ="User"
+     users[username]= {
+       
+          "password": password,
+          "role": role,
+          "status": "Inactive",
+          "failed_attempts": 0
+    }
      print("User added succesfully")
     
      
  
 
 def remove_user():
-    is_delete=False
-    isfound=False
-    userId=int(input("Enter userId you want delete : "))
-    entered_role = input("Enter Role : ")
-    if entered_role.lower()!="admin":
-       print("Admin can only allowed to delete")
-       return
-    if admin_check(entered_role):
-       confirm = input("you want to delete this user info from record (y/n) : ")
-       if confirm.lower()=="y":
-          for user in users:
-            if user[0]==userId:
-              isfound=True
-              deleted_users.append(user)
-              users.remove(user)
-              is_delete=True
-              print("Deleted user record")
-              break
-          if not isfound:
-             print("Record not found")
-       else:
-          return
-    else:
-       print("Invalid pin")
-    return is_delete
-
+   username=input("Enter Username :").strip()
+   if username in users:
+     confirm = input("Do you want to delete this user? (y/n) : ").strip()
+     if confirm.lower()=="y":
+        deleted_users[username]=users.pop(username)
+        print("User deleted successfully.")
+     else:
+        print("Deletion cancelled.")    
+   else :
+     print("Record not found")
 
 
 def search_user():
-   is_found=False
-   entered_role = input("Enter Role : ")
-   if entered_role.lower()!="admin" and entered_role.lower()!="manager":
-       print("Admin and manager can allowed to show information")
-       return
-   if admin_check(entered_role) or manager_check(entered_role):
-      user_id=int(input("Enter User Id : "))
-      line()
-      for user in users:
-          if user[0]== user_id:
-             is_found=True
-             print("Record found : ")
-             print_user(user)
-             break
-      if  not is_found:
-         print("Record not Found")
-   
-
+    username=input("Enter Username :").strip()
+    if username in users:
+       user=users[username]
+       print_user(user,username) 
+    else:
+       print("User not found")
 
 
 def login():
-  count=0
-  while count<3:
-     username=input("Enter your Username : ")
-     password=input("Enter your password : ")
-     is_found=False
-     for user in users:
-       if username==user[1]:
-         is_found=True
-         if user[4].lower()=="locked":
-             print("User are Locked Not Allowed to login")
-             return
-         if password==user[2]:
-               user[4]="Active"
-               print("Acess Granted")
-               user[5]=0
-               return
-         else:
-               user[5]+=1
-               count+=1
-               print("Invalid password")
-               remaining=3-user[5] 
-               if user[5]>=3:
-                 user[4]="locked"
-                 print("Your acount are locked ")
-                 return
-         break
-     if not is_found:
-        print("Invalid Username")
-        count+=1
-  print(" Login Failed ")
-  
+  while True:
+     username=input("Enter your username : ").strip()
+     password=input("Enter your password : ").strip()
+     if username not in users:
+        print("Username not found")
+        continue
+     if users[username]["status"]=="Locked":
+           print("Your account is looked")
+           return False
+     if users[username]["password"]==password:
+           users[username]["failed_attempts"]=0
+           users[username]["status"]="Active"
+           print("Access Granted")
+           return True
+     
+     users[username]["failed_attempts"]+=1
+     print("Wrong password")
+     if users[username]["failed_attempts"]>=3:
+          users[username]["status"]="Locked"
+          print("Account Locked")
+          return False
+ 
         
        
 def lock_account():
-   entered_role = input("Enter Role : ")
-   if admin_check(entered_role):
-      user_id=int(input("Enter user Id which you want to lock :"))
-      for user in users:
-         if user[0]==user_id:
-            user[4]="Locked"
+      username=input("Enter username which you want to lock :")
+      if username in users:
+         if users[username]["status"]!="Locked":
+            users[username]["status"]="Locked"
             print("user are Locked")
             return
-      print("User not found")   
-   else:
-       print("Admin can only allowed ")
+         else:
+          print("User are already Locked")   
+      else:
+       print("User not Found")
+
 
 def unlock_account():
-   entered_role = input("Enter Role : ")
-   if admin_check(entered_role):
-      user_id=int(input("Enter user Id which you want to unlock :"))
-      for user in users:
-         if user[0]==user_id:
-            if user[4].lower()=="locked":
-              user[4]="Inactive"
-              print("user are unlocked")
-              return
-            else:
-               print("user already unlocked")
-               break
-      print("User not found")   
-   else:
-       print("Admin can only allowed ")
+    username=input("Enter username which you want to lock :")
+    if username in users:
+         if users[username]["status"]=="Locked":
+            users[username]["status"]="Inactive"
+            print("user are unlocked")
+            return
+         else:
+          print("User are already unlocked")   
+    else:
+       print("User not Found")
+ 
+
 
 def change_password():
-  user_id=int(input("Enter Your user Id :"))
-  for user in users:
-    if user[0]==user_id:
-      if user[4].lower()=="active":
+  username=input("Enter Your username :")
+  if username in users:
+      if users[username]["status"].lower()=="active":
          old_password=input("Enter your password : ")
-         if old_password==user[2]:
+         if old_password==users[username]["password"]:
             new_password=input("Enter your new password : ")
             confirm_password=input("Enter your new password (to confirm) : ")
             if new_password==confirm_password :
-             user[2]=new_password
+             users[username]["password"]=new_password
              print("!! Password Updated !!")
             else:
               print("--- passwords do not match --- ")
@@ -259,92 +185,153 @@ def change_password():
    
 
 def  view_all_user():
-  entered_role = input("Enter Role : ")
-  if entered_role.lower()!="admin" or entered_role.lower()!="manager":
-    for user in users:
-       print_list(user)
-  else:
-     print("Not allow to show information")
+    for username, details in users.items():
+       print_list(username,details)
+  
+
+
 
 def count_user():
    print(f"Count of users : {len(users)}")
 
 def failed_login_tracking():
-   entered_role = input("Enter Role : ")
-   if admin_check(entered_role) or manager_check(entered_role):
-     for user in users:
-       if user[5]!=0:
-         print(f"User Id : {user[0]}  failed attemp : {user[5]}")
+     for username, details in users.items():
+       if details["failed_attempts"] > 0:
+         print(f"Username : {username}")
+         print(f"failed attempts : {details['failed_attempts']}")
        
 
 def logout():
-    user_id=int(input("Enter user Id which you want to logout :"))
-    for user in users:
-         if user[0]==user_id:
-           if user[4].lower()=="active":
-              user[4]="Inactive"
-              print("--- Logged out successfully ---")
-              return
-           else:
+    username=input("Enter username which you want to logout :")
+    if username in users:
+        if users[username]['status'].lower()=="active":
+            users[username]['status']="Inactive"
+            print("--- Logged out successfully ---")
+            return
+        else:
              print("--- You are not logged in ---")
-    print("User not found")
+    else: 
+       print("User not found")
     line()
       
 
 
 
-users=[
-   #userId, username, password, role, status, login_failed
-    [101, "rahul01", "Rahul@123", "Admin", "Active", 0],
-    [102, "priya22", "Priya@456", "User", "Active", 0],
-    [103, "amit_dev", "Amit#789", "User", "Inactive", 0],
-    [104, "neha07", "Neha@321", "Manager", "Active", 0],
-    [105, "karan99", "Karan#555", "User", "Locked", 0],
-    [106, "simran18", "Simran@888", "User", "Active", 0],
-    [107, "rohit_x", "Rohit@111", "Admin", "Inactive", 0],
-    [108, "anjali_p", "Anjali#222", "Manager", "Active", 0],
-    [109, "vivek09", "Vivek@999", "User", "Locked", 0],
-    [110, "pooja_17", "Pooja#444", "User", "Active", 0]
-]
+users = {
+    "rahul01": {
+        "password": "Rahul@123",
+        "role": "Admin",
+        "status": "Active",
+        "failed_attempts": 0
+    },
 
-deleted_users=[]
+    "priya22": {
+        "password": "Priya@456",
+        "role": "User",
+        "status": "Active",
+        "failed_attempts": 0
+    },
+
+    "amit_dev": {
+        "password": "Amit#789",
+        "role": "User",
+        "status": "Inactive",
+        "failed_attempts": 0
+    },
+
+    "neha07": {
+        "password": "Neha@321",
+        "role": "Manager",
+        "status": "Active",
+        "failed_attempts": 0
+    },
+
+    "karan99": {
+        "password": "Karan#555",
+        "role": "User",
+        "status": "Locked",
+        "failed_attempts": 0
+    },
+
+    "simran18": {
+        "password": "Simran@888",
+        "role": "User",
+        "status": "Active",
+        "failed_attempts": 0
+    },
+
+    "rohit_x": {
+        "password": "Rohit@111",
+        "role": "Admin",
+        "status": "Inactive",
+        "failed_attempts": 0
+    },
+
+    "anjali_p": {
+        "password": "Anjali#222",
+        "role": "Manager",
+        "status": "Active",
+        "failed_attempts": 0
+    },
+
+    "vivek09": {
+        "password": "Vivek@999",
+        "role": "User",
+        "status": "Locked",
+        "failed_attempts": 0
+    },
+
+    "pooja_17": {
+        "password": "Pooja#444",
+        "role": "User",
+        "status": "Active",
+        "failed_attempts": 0
+    }
+}
+deleted_users={}
 
 
 
 header()
-admin_pin="9876"
-manager_pin="1234"
 is_delete=False
 choice=1
-
 while choice : 
-    choice=menu()
+    choice=front_menu()
     match choice:
           case 0:
               line()
               exit()
           case 1:
-              add_user()
-          case 2:
-              is_delete=remove_user()
-          case 3:
-              search_user()
-          case 4:
               login()
-          case 5:
+          case 2:
+              add_user()
+
+if login():
+    while True : 
+      choice=menu()
+      match choice:
+          case 0:
+              line()
+              exit()
+          case 1:
+              remove_user()
+          case 2:
+              search_user()
+          case 3:
               lock_account()
-          case 6:
+          case 4:
               unlock_account()
-          case 7:
+          case 5:
               change_password()
-          case 8:
+          case 6:
               view_all_user()
-          case 9:
+          case 7:
               count_user()
-          case 10:
+          case 8:
               failed_login_tracking()
-          case 11:
+          case 9:
               logout()
           case _:
               print("!!! Invalid choice !!!")
           
+

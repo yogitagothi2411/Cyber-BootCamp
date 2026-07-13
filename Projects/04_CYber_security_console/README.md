@@ -2,25 +2,30 @@
 
 # Feature
 
-- User Login (Username & Password Authentication)
-- Change Password
+- User signup
+- User login
+- User search
+- Change password
+- Lock account
+- Unlock account
+- Failed login tracking
+- User count
 - Logout
-- View Login Statistics
-- Maximum Login Attempts (3 Attempts)
+- Dictionary based storage
 - Menu-Driven Interface
 - Console-Based User Interaction
 
 
 ## Concepts Used
 
-- Variables
-- User Input
-- Conditional Statements (`if`, `else`)
-- Logical Operators (`and`, `or`, `not`)
-- `while` Loop
+- Dictionary
+- Nested Dictionary
 - Functions
-- Global Variables
-- `match-case`
+- Loops
+- Conditions
+- String methods
+- Dictionary methods
+- Modular programming
 
 ## Cybersecurity Concepts
 
@@ -29,3 +34,11 @@
 - Session Management
 - Account Lockout
 - Login Monitoring
+
+## Future Improvements
+
+- Password hashing
+- File storage
+- Session management
+- Role-based authorization
+- Input validation

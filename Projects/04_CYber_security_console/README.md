@@ -23,7 +23,6 @@
 - Functions
 - Loops
 - Conditions
-- String methods
 - Dictionary methods
 - Modular programming
 

@@ -5,12 +5,12 @@ Date: 29-06-2026
 Author: pyLearner
 """
 from datetime import date, datetime
-date = date.today()
+today = date.today()
 Time = datetime.now().time()
 print("----------------------------------------------------------------")
 print("              :::: BMI Calculator ::::")
 print("----------------------------------------------------------------")
-print(f"Date : {date}")
+print(f"Date : {today}")
 print(f"Time : {Time.strftime('%H:%M:%S')}")
 print("----------------------------------------------------------------")
 #menu

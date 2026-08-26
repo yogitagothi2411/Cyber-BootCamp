@@ -26,4 +26,15 @@
 - Input Validation
 - Cybersecurity Incident Management
 
-
+File persistence
+Loading data
+Saving data
+CSV representation
+Parsing
+Structural validation
+Value validation
+Handling corrupted records
+continue
+Data normalization
+ID generation
+CRUD-like operations

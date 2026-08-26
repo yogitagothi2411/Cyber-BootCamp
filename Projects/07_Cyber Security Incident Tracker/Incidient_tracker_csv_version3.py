@@ -3,6 +3,7 @@ Project: Cyber Security incident tracker(version-3)
 feature-adding csv
 BootCamp Day: 11
 Date: 19-08-2026 
+updated: 26-08-2026
 Author: yogita gothi
 """
 def line():
@@ -29,8 +30,13 @@ def menu():
     print(" 8. View All Incident")
     print(" 0. Exit")
     line()
-    choice=int(input("Enter Your Choice : "))
-    return choice
+    try:
+      choice=int(input("Enter Your Choice : "))
+      return choice
+    except ValueError:
+        print("Invalid choice! Enter a valid number")
+        return None
+   
 
 
 
@@ -99,7 +105,14 @@ def load_incident():
          if len(line)!=6:
              print("Invalid incident record: expected 6 fields")
              continue     
-         incd_id=line[0]
+       # if (line[0])[3:].isdigit() and line[0][:3] =="INC":
+         if line[0].startswith("INC") and (line[0])[3:].isdigit():
+                incd_id=line[0]
+         else:
+             print("Invalid incident id")
+             continue
+             
+             
          severity=line[1]
          if severity.lower() not in ("low", "medium", "high", "critical"):
               continue
@@ -127,7 +140,7 @@ def load_incident():
   return incidents   
 
 
-def get_next_incident_id(incidents):
+def get_highest_incident_id(incidents):
     id_list=[0]
     for incident in incidents:
         id_list.append(int(incident[3:]))
@@ -136,7 +149,7 @@ def get_next_incident_id(incidents):
 
     
 def report_incident(incidents):
-    new_id=f"INC{get_next_incident_id(incidents)
+    new_id=f"INC{get_highest_incident_id(incidents)
                  +1:03d}"
     severity=input("Enter incident severity : ").strip().lower()
     if severity in("low", "medium","high", "critical"):
@@ -203,7 +216,9 @@ def search_incident(incidents):
    inc_id="INC"+input("Enter incident id(e.g. 001) : ")
    if inc_id in incidents:
        inc=incidents[inc_id]
-       print_inc(inc_id, inc)      
+       print_inc(inc_id, inc)    
+   else:  
+       print("Id does not exist")
 
 
 def show_incidents(status, incidents):
@@ -250,9 +265,11 @@ def view_all_incident(incidents):
 def main():
     header()
     incidents = load_incident()
-    choice=True
-    while(choice):
+    while True:
        choice= menu()
+       if choice is None:
+           continue
+           
        match choice:
           case 0:
               line()

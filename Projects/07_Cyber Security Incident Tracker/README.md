@@ -38,3 +38,16 @@ continue
 Data normalization
 ID generation
 CRUD-like operations
+
+
+## Day 12 learning 
+
+- try-except
+- mHandling ValueError
+- mReturning None
+- mUsing continue after invalid - mmenu input
+- mValidating CSV field count
+- mValidating incident IDs
+- Validating severity and status
+- Skipping corrupted records safely
+- Detecting empty fields 

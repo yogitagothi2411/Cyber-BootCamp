@@ -3,7 +3,7 @@ Project: Cyber Security incident tracker(version-3)
 feature-adding csv
 BootCamp Day: 11
 Date: 19-08-2026 
-updated: 26-08-2026
+updated: 29-08-2026
 Author: yogita gothi
 """
 def line():
@@ -97,7 +97,7 @@ def load_incident():
   incidents={}
   try:
     with open("incident.csv","r") as file: 
-       while True:
+      while True:
          line=file.readline()
          if line=="":
                 break
@@ -109,22 +109,25 @@ def load_incident():
          if line[0].startswith("INC") and (line[0])[3:].isdigit():
                 incd_id=line[0]
          else:
-             print("Invalid incident id")
-             continue
+            print("Invalid incident id")
+            continue
              
              
          severity=line[1]
          if severity.lower() not in ("low", "medium", "high", "critical"):
+              print("Invalid severity")
               continue
          status=line[2]
          if status.lower() not in("open", "in progress", "resolved", "closed"):
+               print("Invalid status")
                continue
          analyst=line[3]
          reported_by=line[4]
          type=line[5]
-         if incd_id=="" or severity=="" or status=="":
-             print("Invalid incident record: required field is missing")
-             continue
+        
+         if not all (field.strip() for field in line) :   
+                print("Invalid incident record: required field is missing")
+                continue
          incidents[incd_id]={
             "severity":severity,
             "status":status,
@@ -267,6 +270,7 @@ def main():
     incidents = load_incident()
     while True:
        choice= menu()
+
        if choice is None:
            continue
            

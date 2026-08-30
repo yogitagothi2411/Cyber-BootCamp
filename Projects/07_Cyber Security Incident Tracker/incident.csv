@@ -1,4 +1,10 @@
 INC001,High,Open,Amit,Rahul,Phishing
-INC002,High,Open,amit,rahul,phishing
-INCasd,High,Open,Am,Rah,Phishing
-INC008,High,Open,,ral,phishing
+INC002,High,Open,ram,Rahul,Phishing
+INC003,Medium,In Progress,Sneha,Yogita,Malware
+INC004,Critical,Closed,Rohit,Ankit,Ransomware
+INC005,Low,Resolved,Priya,Neha,Spam
+INC006,Critical,In Progress,Karan,Deepak,Brute Force
+INC007,Medium,Closed,Pooja,Riya,Unauthorized Access
+INC008,Critical,Resolved,Vikas,Arjun,Data Breach
+INC009,Low,Open,Meena,Suresh,Suspicious Activity
+INC010,High,Closed,Ajay,Kavita,DDoS Attack

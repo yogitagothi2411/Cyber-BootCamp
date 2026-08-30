@@ -83,7 +83,17 @@ def print_severity(low_count,medium_count,high_count,critical_count):
 
 
 
-def save_incidient(incidents):
+VALID_STATUS = ("open", "in progress", "resolved", "closed")
+
+VALID_SEVERITY = ("low", "medium", "high", "critical")
+
+def valid_status(status):
+         return  status.lower().strip() in VALID_STATUS
+               
+def valid_severity(severity):
+         return  severity.lower().strip() in VALID_SEVERITY
+              
+def save_incident(incidents):
   with open("incident.csv","w") as file:
    for incident in incidents:
      curnt_inc=incidents[incident]
@@ -111,20 +121,15 @@ def load_incident():
          else:
             print("Invalid incident id")
             continue
-             
-             
          severity=line[1]
-         if severity.lower() not in ("low", "medium", "high", "critical"):
-              print("Invalid severity")
+         if not valid_severity(severity):
               continue
          status=line[2]
-         if status.lower() not in("open", "in progress", "resolved", "closed"):
-               print("Invalid status")
+         if not valid_status(status):
                continue
          analyst=line[3]
          reported_by=line[4]
          type=line[5]
-        
          if not all (field.strip() for field in line) :   
                 print("Invalid incident record: required field is missing")
                 continue
@@ -150,25 +155,35 @@ def get_highest_incident_id(incidents):
     return max(id_list)
 
 
+
+def get_incident_id(incidents):
+    inc_id="INC"+input("Enter incident id(e.g. 001) : ")
+    if inc_id in incidents:
+        return inc_id
+    else:
+        print("Incident does not exist ")
+        return None
+
+
     
 def report_incident(incidents):
     new_id=f"INC{get_highest_incident_id(incidents)
                  +1:03d}"
     severity=input("Enter incident severity : ").strip().lower()
-    if severity in("low", "medium","high", "critical"):
+    if valid_severity(severity):
         severity=severity.title()
     else:
         print("invalid severity")
         return
     status= input("Enter incident status : ").strip().lower()
-    if status in("open", "in progress", "resolved", "closed"):
+    if valid_status(status):
         status=status.title()
     else:
         print("invalid status")
         return
-    analyst=input("Enter incident analyst : ")
-    reported_by=input("Enter your name : ")
-    type=input("Enter incident type : ")
+    analyst=input("Enter incident analyst : ").strip()
+    reported_by=input("Enter your name : ").strip()
+    type=input("Enter incident type : ").strip()
     
     incidents[new_id]={
         "severity": severity,
@@ -181,47 +196,48 @@ def report_incident(incidents):
 
 
 def assign_analyst(incidents):
-    inc_id="INC"+input("Enter incident id(e.g. 001) : ")
-    if inc_id in incidents:
-        incidents[inc_id]["analyst"]=input("Enter analyst name : ")
-        print("Analyst assigned successfully.")
-    else:
-        print("Incident does not exit ")
-
+    inc_id = get_incident_id(incidents)
+    if inc_id is None:
+        return
+    incidents[inc_id]["analyst"]=input("Enter analyst name : ")
+    print("Analyst assigned successfully.")
+    
 
 def change_severity(incidents):
-    inc_id="INC"+input("Enter incident id(e.g. 001) : ") 
-    if inc_id in incidents:
-        print(f"current severity : { incidents[inc_id]['severity']}")
-        change=input("Enter severity : ").strip().lower()
-        if change in("low", "medium","high", "critical"):
-            incidents[inc_id]["severity"]=change.title()
-        else:
-            print("Invalid status!")
-            return
-        print(f"updated severity : { incidents[inc_id]['severity']}")
+    inc_id=get_incident_id(incidents)
+    if inc_id is None:
+        return
+    print(f"current severity : { incidents[inc_id]['severity']}")
+    change_sevrty=input("Enter severity : ").strip().lower()
+    if valid_severity(change_sevrty):
+            incidents[inc_id]["severity"]=change_sevrty.title()
+    else:
+        print("Invalid severity!")
+        return
+    print(f"updated severity : { incidents[inc_id]['severity']}")
 
 
 def change_status(incidents):
-    inc_id="INC"+input("Enter incident id(e.g. 001) : ")
-    if inc_id in incidents:
-        print(f"current status : { incidents[inc_id]['status']}")
-        change=input("Enter status : ").strip().lower()
-        if change in("open", "in progress", "resolved", "closed"):
-             incidents[inc_id]["status"]=change.title()
-        else:
-            print("Invalid status!")
-            return
-        print(f"updated status : { incidents[inc_id]['status']}")
+    inc_id=get_incident_id(incidents)
+    if inc_id is None:
+        return
+    print(f"current status : { incidents[inc_id]['status']}")
+    change_sts=input("Enter status : ").strip().lower()
+    if valid_status(change_sts):
+          incidents[inc_id]["status"]=change_sts.title()
+    else:
+        print("Invalid status!")
+        return
+    print(f"updated status : { incidents[inc_id]['status']}")
 
 
 def search_incident(incidents):
-   inc_id="INC"+input("Enter incident id(e.g. 001) : ")
-   if inc_id in incidents:
-       inc=incidents[inc_id]
-       print_inc(inc_id, inc)    
-   else:  
-       print("Id does not exist")
+   inc_id=get_incident_id(incidents)
+   if inc_id is None:
+       return
+   inc=incidents[inc_id]
+   print_inc(inc_id, inc)    
+   
 
 
 def show_incidents(status, incidents):
@@ -258,7 +274,9 @@ def incident_statistics(incidents):
         
 
 def view_all_incident(incidents):
-    print(f"{'ID':<8} | {'Severity':<12} | {'Status':<12} | {'Assigned To':<15} | {'Reported By':<12} | {'Type'}")
+    print("------------------------------------------------------------------------------------------------")
+    print(f"{'ID':<8} || {'Severity':<12} || {'Status':<12} || {'Assigned To':<15} || {'Reported By':<12} || {'Type'}")
+    print("------------------------------------------------------------------------------------------------")
        # key     value
     for incdnt ,information in incidents.items():
         print_list(incdnt, information)
@@ -270,7 +288,6 @@ def main():
     incidents = load_incident()
     while True:
        choice= menu()
-
        if choice is None:
            continue
            
@@ -280,21 +297,21 @@ def main():
               exit()
           case 1:
                report_incident(incidents)
-               save_incidient(incidents)
+               save_incident(incidents)
           case 2:
               assign_analyst(incidents)
-              save_incidient(incidents)
+              save_incident(incidents)
           case 3:
               change_severity(incidents)
-              save_incidient(incidents)
+              save_incident(incidents)
           case 4:
               change_status(incidents)
-              save_incidient(incidents)
+              save_incident(incidents)
           case 5:
               search_incident(incidents)
           case 6:
               status=input("Enter status ('open', 'in progress', 'resolved', 'closed') :").strip().lower()
-              if status in ("open", "in progress", "resolved", "closed"):
+              if status in VALID_STATUS :
                  show_incidents(status, incidents)
               else:
                  print("Invalid status!")
